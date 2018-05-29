@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Treeview By Ajax And Jquery</title>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $("#button").click(function(){
+        $.ajax({url:"categories.xml",
+            success:function(result){
+           $(result).find("Categories").each(function(i){
+            $("body").append("<p>CategoryName:"+$(this).find("CategoryName").text()+"</strong>");
+            var catId = $(this).find("CategoryID").text();
+            var str="<ul>";
+            $.ajax({
+                url :"products.xml",
+                async : false,
+                success:function(productsData){
+                    $(productsData).find("CategoryID:contains('"+catId+"')").parent("Products").each(function(n){str+="<li>"+$(this).find("ProductName").text()+"</li>"})
+                }
+            });
+            str += "</ul>";
+            $("body").append(str);
+           })
+        }});
+    });
+});
+</script>
+</head>
+<body>
+
+<h2>My Categories:</h2>
+<table id="myDiv"></table>
+<button type="button" id="button">Show my Categories</button>
+
+</body>
+</html>
